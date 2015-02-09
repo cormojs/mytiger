@@ -1,0 +1,138 @@
+
+state 0:
+
+	program : . exp 
+
+	ID	shift 6
+	INT	shift 5
+	STRING	shift 4
+	NIL	shift 3
+
+	program	goto 12
+	exp	goto 2
+	lvalue	goto 1
+
+	.	error
+
+
+state 1:
+
+	exp : lvalue .  (reduce by rule 3)
+	lvalue : lvalue . DOT ID 
+	lvalue : lvalue . LBRACK exp RBRACK 
+
+	LBRACK	shift 8
+	DOT	shift 7
+
+
+	.	reduce by rule 3
+
+
+state 2:
+
+	program : exp .  (reduce by rule 0)
+
+
+
+	.	reduce by rule 0
+
+
+state 3:
+
+	exp : NIL .  (reduce by rule 4)
+
+
+
+	.	reduce by rule 4
+
+
+state 4:
+
+	exp : STRING .  (reduce by rule 2)
+
+
+
+	.	reduce by rule 2
+
+
+state 5:
+
+	exp : INT .  (reduce by rule 1)
+
+
+
+	.	reduce by rule 1
+
+
+state 6:
+
+	lvalue : ID .  (reduce by rule 5)
+
+
+
+	.	reduce by rule 5
+
+
+state 7:
+
+	lvalue : lvalue DOT . ID 
+
+	ID	shift 9
+
+
+	.	error
+
+
+state 8:
+
+	lvalue : lvalue LBRACK . exp RBRACK 
+
+	ID	shift 6
+	INT	shift 5
+	STRING	shift 4
+	NIL	shift 3
+
+	exp	goto 10
+	lvalue	goto 1
+
+	.	error
+
+
+state 9:
+
+	lvalue : lvalue DOT ID .  (reduce by rule 6)
+
+
+
+	.	reduce by rule 6
+
+
+state 10:
+
+	lvalue : lvalue LBRACK exp . RBRACK 
+
+	RBRACK	shift 11
+
+
+	.	error
+
+
+state 11:
+
+	lvalue : lvalue LBRACK exp RBRACK .  (reduce by rule 7)
+
+
+
+	.	reduce by rule 7
+
+
+state 12:
+
+
+	EOF	accept
+
+
+	.	error
+
+9 of 26 action table entries left after compaction
+5 goto table entries
